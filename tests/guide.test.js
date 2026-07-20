@@ -7,7 +7,9 @@ describe("guide command", () => {
     const guide = commandData.find((command) => command.name === "guide");
     expect(guide).toBeDefined();
     const choices = guide.options.find((option) => option.name === "topic").choices.map((choice) => choice.value);
-    expect(choices).toEqual(expect.arrayContaining(["quick-start", "radio", "calls", "panic", "codes", "commands", "troubleshooting"]));
+    expect(choices).toEqual(
+      expect.arrayContaining(["quick-start", "radio", "calls", "panic", "codes", "commands", "troubleshooting"]),
+    );
   });
 
   it("documents panic location lookup and Code 4 behavior", () => {

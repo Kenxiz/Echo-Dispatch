@@ -22,7 +22,7 @@ describe("ER:LC polling safety", () => {
       5e3,
       async () => void 0,
       async () => void 0,
-      async () => void 0
+      async () => void 0,
     );
     adapter.start();
     await vi.advanceTimersByTimeAsync(6e4);
@@ -30,15 +30,27 @@ describe("ER:LC polling safety", () => {
   });
   it("honors Retry-After before polling again", async () => {
     vi.useFakeTimers();
-    const response = { Name: "Test", OwnerId: 1, CoOwnerIds: [], CurrentPlayers: 0, MaxPlayers: 40, JoinKey: "Test", AccVerifiedReq: "Disabled", TeamBalance: false };
-    const fetchServerInfo = vi.fn().mockRejectedValueOnce(new ErlcApiError(429, "Rate limited", 3e4)).mockResolvedValue(response);
+    const response = {
+      Name: "Test",
+      OwnerId: 1,
+      CoOwnerIds: [],
+      CurrentPlayers: 0,
+      MaxPlayers: 40,
+      JoinKey: "Test",
+      AccVerifiedReq: "Disabled",
+      TeamBalance: false,
+    };
+    const fetchServerInfo = vi
+      .fn()
+      .mockRejectedValueOnce(new ErlcApiError(429, "Rate limited", 3e4))
+      .mockResolvedValue(response);
     const adapter = new EmergencyCallAdapter(
       { fetchServerInfo },
       await createStore(),
       5e3,
       async () => void 0,
       async () => void 0,
-      async () => void 0
+      async () => void 0,
     );
     adapter.start();
     await vi.advanceTimersByTimeAsync(29999);
@@ -51,14 +63,15 @@ describe("ER:LC polling safety", () => {
     vi.useFakeTimers();
     const store = await createStore();
     const onError = vi.fn();
-    const makeAdapter = () => new EmergencyCallAdapter(
-      { fetchServerInfo: vi.fn().mockRejectedValue(new ErlcApiError(403, "Malformed Server-Key")) },
-      store,
-      5e3,
-      async () => void 0,
-      async () => void 0,
-      onError
-    );
+    const makeAdapter = () =>
+      new EmergencyCallAdapter(
+        { fetchServerInfo: vi.fn().mockRejectedValue(new ErlcApiError(403, "Malformed Server-Key")) },
+        store,
+        5e3,
+        async () => void 0,
+        async () => void 0,
+        onError,
+      );
 
     const first = makeAdapter();
     first.running = true;
@@ -68,5 +81,22 @@ describe("ER:LC polling safety", () => {
     await second.poll();
 
     expect(onError).toHaveBeenCalledTimes(1);
+  });
+  it("forwards each player snapshot for continuous registered-unit location tracking", async () => {
+    const players = [{ Player: "OfficerPlayer:123", Callsign: "1L-18", Location: { PostalCode: "205" } }];
+    const onPlayers = vi.fn().mockResolvedValue(undefined);
+    const adapter = new EmergencyCallAdapter(
+      { fetchServerInfo: vi.fn().mockResolvedValue({ Players: players }) },
+      await createStore(),
+      10_000,
+      async () => undefined,
+      async () => undefined,
+      async () => undefined,
+      onPlayers,
+    );
+    adapter.running = true;
+    await adapter.poll();
+    adapter.stop();
+    expect(onPlayers).toHaveBeenCalledWith(players);
   });
 });

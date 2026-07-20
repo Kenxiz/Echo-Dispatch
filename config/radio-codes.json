@@ -48,7 +48,10 @@
   "10-47": { "meaning": "Complete Assignment", "aliases": ["complete assignment"] },
   "10-48": { "meaning": "Detaining Subject/Expedite", "aliases": ["detaining subject", "expedite"] },
   "10-49": { "meaning": "Drag Racing", "aliases": ["drag racing"] },
-  "10-50": { "meaning": "Motor Vehicle Accident", "aliases": ["MVA", "motor vehicle accident", "vehicle collision", "crash", "wreck"] },
+  "10-50": {
+    "meaning": "Motor Vehicle Accident",
+    "aliases": ["MVA", "motor vehicle accident", "vehicle collision", "crash", "wreck"]
+  },
   "10-51": { "meaning": "Wrecker Needed", "aliases": ["wrecker needed", "tow truck"] },
   "10-52": { "meaning": "Ambulance Needed", "aliases": ["ambulance needed", "request EMS"] },
   "10-53": { "meaning": "Roadway Blocked", "aliases": ["roadway blocked", "road blocked"] },
@@ -90,7 +93,10 @@
   "10-89": { "meaning": "Dog Call", "aliases": ["dog call"] },
   "10-90": { "meaning": "Alarm", "aliases": ["alarm"] },
   "10-91": { "meaning": "Animal Carcass at Location", "aliases": ["animal carcass"] },
-  "10-92": { "meaning": "Surveillance (Radar)", "aliases": ["radar", "running radar", "speed enforcement", "surveillance"] },
+  "10-92": {
+    "meaning": "Surveillance (Radar)",
+    "aliases": ["radar", "running radar", "speed enforcement", "surveillance"]
+  },
   "10-93": { "meaning": "Possible Aircraft Crash", "aliases": ["possible aircraft crash", "aircraft crash"] },
   "10-94": { "meaning": "Gunshot Wound", "aliases": ["gunshot wound", "GSW"] },
   "10-95": { "meaning": "Drug Check", "aliases": ["drug check"] },
@@ -102,9 +108,20 @@
   "10-106": { "meaning": "Court Appearance", "aliases": ["court appearance", "in court"] },
   "10-107": { "meaning": "Vehicle Maintenance", "aliases": ["vehicle maintenance"] },
   "10-108": { "meaning": "Building Check", "aliases": ["building check"] },
-  "Signal 11": { "meaning": "Running Radar", "aliases": ["signal 11", "radar", "speed enforcement"] },
+  "Signal 11": { "meaning": "Running Radar", "aliases": ["signal 11"] },
   "Code 1": { "meaning": "Routine Response", "aliases": ["routine response", "no lights or siren"] },
   "Code 2": { "meaning": "Urgent Response", "aliases": ["urgent response", "expedited response"] },
   "Code 3": { "meaning": "Emergency Response", "aliases": ["emergency response", "lights and siren"] },
-  "Code 4": { "meaning": "Scene Secure; Close Assigned Call; Return Attached Units to 10-8", "aliases": ["scene secure", "under control", "no further units"] }
+  "Code 4": { "meaning": "Scene Secure", "aliases": ["scene secure", "under control"] },
+  "Code 5": {
+    "meaning": "Felony Stop",
+    "category": "OFFICER_SAFETY",
+    "action": "UPGRADE_FELONY_STOP",
+    "actionValue": "FELONY_STOP",
+    "priority": 1,
+    "responseCode": 3,
+    "requiresCall": true,
+    "createsCall": true,
+    "aliases": ["felony stop", "high-risk stop", "high risk stop", "vehicle extraction", "armed vehicle stop"]
+  }
 }

@@ -1,0 +1,10 @@
+{
+  "Signal 11": {
+    "meaning": "Running Radar",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "RADAR",
+    "aliases": ["signal 11"],
+    "spokenForms": ["signal eleven", "signal one one"]
+  }
+}

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "configured code and status",
+    "transcript": "1 Lincoln 18, show me 10-8, active 10-71.",
+    "codes": ["10-8", "10-71"]
+  },
+  {
+    "name": "spoken compound code",
+    "transcript": "1 Lincoln 18, show me ten eight, active ten seventy-one.",
+    "codes": ["10-8", "10-71"]
+  },
+  {
+    "name": "spoken digit code",
+    "transcript": "1 Lincoln 18, show me one zero eight, active one zero seven one.",
+    "codes": ["10-8", "10-71"]
+  },
+  { "name": "unhyphenated code", "transcript": "1 Lincoln 18, show me 108, active 1071.", "codes": ["10-8", "10-71"] },
+  { "name": "clipped callsign", "transcript": "One link in eighteen show me tonight.", "codes": ["10-8"] },
+  { "name": "scoped code four", "transcript": "Scene is Code 4, keep me attached.", "codes": ["Code 4"] },
+  { "name": "felony stop", "transcript": "Upgrade this to a Code 5 felony stop.", "codes": ["Code 5"] }
+]

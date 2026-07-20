@@ -35,16 +35,35 @@ ${JSON.stringify(data)}`;
 }
 
 export function fallbackCallPriority(input) {
-  const meaningfulWeapon = input.weaponInfo && !/^\s*(?:none|no|unknown|n\/?a|not reported)\s*[.!]?\s*$/i.test(input.weaponInfo);
+  const meaningfulWeapon =
+    input.weaponInfo && !/^\s*(?:none|no|unknown|n\/?a|not reported)\s*[.!]?\s*$/i.test(input.weaponInfo);
   let text = [input.incident, input.description, input.injuryInfo, input.suspectInfo]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-  text = text.replace(/\b(?:no|without|not reporting)\s+(?:known\s+)?(?:weapons?|guns?|gunfire|shots?|injur(?:y|ies)|fire)\b/g, "");
+  text = text.replace(
+    /\b(?:no|without|not reporting)\s+(?:known\s+)?(?:weapons?|guns?|gunfire|shots?|injur(?:y|ies)|fire)\b/g,
+    "",
+  );
 
-  if (meaningfulWeapon || /\b(?:shots? fired|shooting|gunfire|armed|rifle|handgun|knife|stabbing|officer (?:down|needs help)|hostage|abduct|kidnap|structure fire|building (?:is )?on fire|unconscious|not breathing|serious injuries|life[- ]threatening|active attack)\b/i.test(text))
-    return { priority: 1, reason: "Fallback safety rules detected a reported immediate threat to life or responder safety." };
-  if (/\b(?:in progress|active|burglary|breaking and entering|assault|domestic|fight|collision|accident|crash|alarm|suspicious|hit and run|intoxicated driver|roadway blocked|prowler|disturbance)\b/i.test(text))
-    return { priority: 2, reason: "Fallback rules detected an urgent or time-sensitive incident without a confirmed immediate life threat." };
+  if (
+    meaningfulWeapon ||
+    /\b(?:shots? fired|shooting|gunfire|armed|rifle|handgun|knife|stabbing|officer (?:down|needs help)|hostage|abduct|kidnap|structure fire|building (?:is )?on fire|unconscious|not breathing|serious injuries|life[- ]threatening|active attack)\b/i.test(
+      text,
+    )
+  )
+    return {
+      priority: 1,
+      reason: "Fallback safety rules detected a reported immediate threat to life or responder safety.",
+    };
+  if (
+    /\b(?:in progress|active|burglary|breaking and entering|assault|domestic|fight|collision|accident|crash|alarm|suspicious|hit and run|intoxicated driver|roadway blocked|prowler|disturbance)\b/i.test(
+      text,
+    )
+  )
+    return {
+      priority: 2,
+      reason: "Fallback rules detected an urgent or time-sensitive incident without a confirmed immediate life threat.",
+    };
   return { priority: 3, reason: "Fallback rules found no reported active or immediate threat." };
 }

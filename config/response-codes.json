@@ -1,0 +1,42 @@
+{
+  "Code 1": {
+    "meaning": "Routine Response",
+    "category": "RESPONSE",
+    "action": "SET_RESPONSE_MODE",
+    "actionValue": "CODE_1",
+    "aliases": ["routine response"]
+  },
+  "Code 2": {
+    "meaning": "Urgent Response",
+    "category": "RESPONSE",
+    "action": "SET_RESPONSE_MODE",
+    "actionValue": "CODE_2",
+    "aliases": ["urgent response"]
+  },
+  "Code 3": {
+    "meaning": "Emergency Response",
+    "category": "RESPONSE",
+    "action": "SET_RESPONSE_MODE",
+    "actionValue": "CODE_3",
+    "aliases": ["emergency response", "lights and siren"]
+  },
+  "Code 4": {
+    "meaning": "Scene Secure",
+    "category": "SCENE_STATUS",
+    "action": "RESOLVE_SCENE",
+    "actionValue": "CODE_4",
+    "requiresCall": true,
+    "aliases": ["scene secure", "under control"]
+  },
+  "Code 5": {
+    "meaning": "Felony Stop",
+    "category": "OFFICER_SAFETY",
+    "action": "UPGRADE_FELONY_STOP",
+    "actionValue": "FELONY_STOP",
+    "priority": 1,
+    "responseCode": 3,
+    "requiresCall": true,
+    "createsCall": true,
+    "aliases": ["felony stop", "high risk stop", "vehicle extraction", "armed vehicle stop"]
+  }
+}
