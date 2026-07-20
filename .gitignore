@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+data/*.json
+data/*.bak-*.json
+data/*.json.bak-*
+data/*.tmp
+coverage/
+*.log
+.DS_Store
