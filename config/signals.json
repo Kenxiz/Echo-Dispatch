@@ -6,5 +6,23 @@
     "actionValue": "RADAR",
     "aliases": ["signal 11"],
     "spokenForms": ["signal eleven", "signal one one"]
+  },
+  "Signal 13": {
+    "meaning": "Clear for Crime Broadcast",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "CLEAR_CRIME_BROADCAST",
+    "aliases": ["clear for crime broadcast"],
+    "spokenForms": ["signal thirteen", "signal one three"]
+  },
+  "Signal 100": {
+    "meaning": "Emergency Traffic Only",
+    "category": "OFFICER_SAFETY",
+    "action": "SET_UNIT_ACTIVITY",
+    "actionValue": "EMERGENCY_TRAFFIC_ONLY",
+    "priority": 1,
+    "responseCode": 3,
+    "aliases": ["emergency traffic only"],
+    "spokenForms": ["signal one hundred", "signal one zero zero"]
   }
 }

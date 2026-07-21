@@ -171,8 +171,8 @@ describe("call lifecycle", () => {
   it("maps expanded operational unit statuses to department codes", async () => {
     await units.register({ discordUserId: "1", callsign: "1L-18", rank: "Officer", division: "Patrol" });
     expect(await units.setStatus("1", "ON_DUTY")).toMatchObject({ statusCode: "10-41" });
-    expect(await units.setStatus("1", "PURSUIT")).toMatchObject({ statusCode: "10-43" });
-    expect(await units.setStatus("1", "BUILDING_CHECK")).toMatchObject({ statusCode: "10-108" });
+    expect(await units.setStatus("1", "PURSUIT")).toMatchObject({ statusCode: "10-80" });
+    expect(await units.setStatus("1", "IN_AREA")).toMatchObject({ statusCode: "Code 6" });
   });
   it("tracks requested resources and bounded factual call updates", async () => {
     const call = await calls.create({

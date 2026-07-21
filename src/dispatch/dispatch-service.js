@@ -316,6 +316,19 @@ export class DispatchService {
     }
 
     for (const operation of interpretation.codeOperations.filter(
+      (operation) => !operation.negated && operation.action === "ACTIVATE_EMERGENCY",
+    )) {
+      call = await run(`radio_code:${operation.code}:emergency`, () =>
+        this.activateOfficerEmergency(userId, {
+          transcript,
+          description: `${unit.callsign} activated ${operation.code}, ${operation.meaning}.`,
+          location: unit.location,
+          stageMedical: true,
+        }),
+      );
+      if (call) context.activeCallId = call.id;
+    }
+    for (const operation of interpretation.codeOperations.filter(
       (operation) => !operation.negated && operation.action === "SET_UNIT_STATUS",
     )) {
       await run(`radio_code:${operation.code}:status`, async () => {
@@ -339,6 +352,24 @@ export class DispatchService {
     )) {
       await run(`radio_code:${operation.code}:activity`, () =>
         this.units.setRadioActivity(userId, operation.code, operation.meaning),
+      );
+    }
+    for (const operation of interpretation.codeOperations.filter(
+      (operation) => !operation.negated && operation.action === "ACKNOWLEDGE_CODE",
+    ))
+      await run(`radio_code:${operation.code}:acknowledge`, async () => ({
+        code: operation.code,
+        meaning: operation.meaning,
+      }));
+    for (const operation of interpretation.codeOperations.filter(
+      (operation) => !operation.negated && operation.action === "SET_SCENE_STATUS",
+    )) {
+      const sceneCall = this.resolveContextCall(this.units.getByUserId(userId), "CURRENT_OR_UNRESOLVED");
+      if (sceneCall) context.activeCallId = sceneCall.id;
+      call = await run(`radio_code:${operation.code}:scene`, () =>
+        sceneCall
+          ? this.calls.setSceneStatus(sceneCall.id, operation.value)
+          : Promise.reject(new Error("No current or unresolved call exists for the scene update.")),
       );
     }
     if (interpretation.unitUpdates.location)
@@ -488,6 +519,25 @@ export class DispatchService {
         context.executionDisposition = context.successfulActions.length ? "PARTIAL" : "FAILED";
       }
     }
+    for (const operation of interpretation.codeOperations.filter(
+      (operation) =>
+        !operation.negated &&
+        operation.action === "REQUEST_RESOURCE" &&
+        !interpretation.resources.some((resource) => resource.resourceType === operation.value),
+    ))
+      await run(`radio_code:${operation.code}:resource`, () =>
+        this.requestResourceInContext(
+          userId,
+          {
+            resourceType: operation.value,
+            quantity: 1,
+            purpose: `RADIO_CODE_${operation.code.replace(/[^A-Z0-9]+/gi, "_")}`,
+            responseMode: `CODE_${operation.responseCode ?? 2}`,
+            disposition: "RESPOND",
+          },
+          context,
+        ),
+      );
     for (const resource of interpretation.resources)
       await run(`request_resource:${resource.resourceType}`, () =>
         this.requestResourceInContext(userId, resource, context),
@@ -625,7 +675,7 @@ export class DispatchService {
       call = await this.calls.create({
         source: "OFFICER_INITIATED",
         incident: "Officer Emergency",
-        radioCode: "10-33",
+        radioCode: "10-99",
         location: input.location ?? unit.location ?? "Location unavailable",
         description: input.description ?? "Officer declared emergency traffic.",
         priority: 1,
@@ -636,7 +686,7 @@ export class DispatchService {
       });
       call = await this.calls.attach(userId, call.id);
     }
-    await this.units.setStatus(userId, "EMERGENCY", "10-33");
+    await this.units.setStatus(userId, "EMERGENCY", "10-99");
     await this.units.setResponseMode(userId, "CODE_3");
     call = await this.calls.setPriority(call.id, 1, "FALLBACK", "Officer panic activation.");
     await this.calls.setUnitRole(call.id, unit.callsign, "ENDANGERED");
@@ -822,7 +872,7 @@ function isTrafficStopCall(call) {
   return Boolean(
     call &&
     (call.stopType ||
-      ["10-11", "10-61"].includes(call.radioCode) ||
+      call.radioCode === "10-11" ||
       /\b(?:traffic|vehicle|felony|high-risk)\s+stop\b/i.test(call.incident)),
   );
 }

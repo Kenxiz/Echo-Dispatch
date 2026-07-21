@@ -19,6 +19,14 @@ export function buildOfficerAcknowledgement(unit, interpretation, context, call)
     parts.push(`Active ${operation.code}, ${operation.meaning}`);
   for (const operation of completedCodes.filter((operation) => operation.action === "SET_RESPONSE_MODE"))
     parts.push(`${operation.code} response set`);
+  for (const operation of completedCodes.filter((operation) => operation.action === "ACKNOWLEDGE_CODE"))
+    parts.push(`${operation.code}, ${operation.meaning}`);
+  for (const operation of completedCodes.filter((operation) => operation.action === "SET_SCENE_STATUS"))
+    parts.push(`${operation.code}, ${operation.meaning}; the scene is marked stabilized`);
+  for (const operation of completedCodes.filter((operation) => operation.action === "ACTIVATE_EMERGENCY"))
+    parts.push(`${operation.code} officer distress activated; emergency traffic only`);
+  for (const operation of completedCodes.filter((operation) => operation.action === "REQUEST_RESOURCE"))
+    parts.push(`${operation.code}, ${operation.meaning}`);
   appendIncidentReadback(parts, interpretation);
   if (context.boloMatches?.[0]) parts.push(boloMatchAdvisory(context.boloMatches[0]));
   appendResourceReadback(parts, interpretation, actionSucceeded);
@@ -66,7 +74,7 @@ function appendIncidentReadback(parts, interpretation) {
     );
   else if (interpretation.incident)
     parts.push(
-      `You're logged with ${withIndefiniteArticle(interpretation.incident.description.toLowerCase())}${interpretation.incident.location ? ` at ${interpretation.incident.location}` : ""}`,
+      `You're logged${interpretation.incident.radioCode ? ` on ${interpretation.incident.radioCode}` : ""} with ${withIndefiniteArticle(interpretation.incident.description.toLowerCase())}${interpretation.incident.location ? ` at ${interpretation.incident.location}` : ""}`,
     );
 }
 

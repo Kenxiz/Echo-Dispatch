@@ -67,7 +67,7 @@ export function compressRadioTraffic(transcript) {
   const facts = [];
   const rules = [
     ["Pursuit", /\b(?:pursuit|fleeing|taking off|not stopping|losing him)\b/i],
-    ["Traffic stop", /\b(?:traffic stop|10-61|out with)\b/i],
+    ["Traffic stop", /\b(?:traffic stop|10-11|out with)\b/i],
     ["Shots fired", /\b(?:shots? fired|started shooting|gunfire|taking fire)\b/i],
     ["Officer down", /\bofficer down\b/i],
     ["EMS requested", /\b(?:request(?:ing)?|need|send)\s+(?:an?\s+)?(?:ambulance|ems|medic)\b/i],

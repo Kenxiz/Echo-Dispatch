@@ -2,7 +2,7 @@ import { z } from "zod";
 import { fallbackCallPriority } from "../ai/call-triage.js";
 
 const TRAFFIC_STOP_PATTERN =
-  /\b(?:traffic stop|stopping (?:a|the) vehicle|vehicle stop|felony stop|10[ -]?61|1061|show me on\s+(?:a\s+)?(?:10[ -]?11|18[ -]?11|1811))\b/i;
+  /\b(?:traffic stop|stopping (?:a|the) vehicle|vehicle stop|felony stop|10[ -]?11|1011|show me on\s+(?:a\s+)?(?:10[ -]?11|18[ -]?11|1811))\b/i;
 
 const INCIDENTS = [
   [
@@ -121,9 +121,11 @@ export function interpretOfficerTransmission(transcript, unit, codebook = null, 
     (match) =>
       ["INCIDENT", "OFFICER_SAFETY"].includes(match.definition.category) &&
       match.definition.action === "CREATE_OR_UPDATE_CALL" &&
-      !(match.definition.code === "10-75" && /\b(?:not stolen|negative stolen|no stolen vehicle)\b/i.test(raw)),
+      !(match.definition.code === "10-16" && /\b(?:not stolen|negative stolen|no stolen vehicle)\b/i.test(raw)),
   );
   if (!incident && configuredIncident) incident = buildConfiguredIncident(configuredIncident.definition, location);
+  else if (incident && configuredIncident && !incident.radioCode)
+    incident.radioCode = configuredIncident.definition.code;
   const resourceIntent = parseAdditionalUnitIntent(raw);
   const resources = parseResources(raw, incident?.responseCode ?? 2);
   const resourceCancellations = parseResourceCancellations(raw);
@@ -171,7 +173,7 @@ export function interpretOfficerTransmission(transcript, unit, codebook = null, 
   else if (followUp || (unit?.assignedCallId && (resources.length || incident))) classification = "INCIDENT_FOLLOW_UP";
   else if (informationRequest) classification = "INFORMATION_REQUEST";
   else if (contextAction) classification = "UNIT_OPERATION";
-  else if (codeOperations.length) classification = "UNIT_OPERATION";
+  else if (codeOperations.length || resourceCancellations.length) classification = "UNIT_OPERATION";
 
   return interpretationSchema.parse({
     classification,
@@ -181,7 +183,7 @@ export function interpretOfficerTransmission(transcript, unit, codebook = null, 
     unitUpdates: {
       status: /\b(?:on scene|10\s*-?\s*23)\b/i.test(raw)
         ? "ON_SCENE"
-        : /\b(?:en route|10\s*-?\s*17)\b/i.test(raw)
+        : /\b(?:en route|in route|10\s*-?\s*76)\b/i.test(raw)
           ? "EN_ROUTE"
           : incident?.code === "TRAFFIC_STOP"
             ? "TRAFFIC_STOP"
@@ -226,14 +228,27 @@ function deriveCodeOperations(detected, text) {
       value: definition.actionValue,
       priority: definition.priority,
       responseCode: definition.responseCode,
-      negated: isCodeNegated(text, definition.code),
+      negated: isCodeNegated(text, definition),
     }));
 }
-function isCodeNegated(text, code) {
-  return new RegExp(
-    `\\b(?:no|negative|disregard|cancel|do not|don't)\\b[^,.!?;]{0,40}${escapePattern(code).replace("-", "[ -]?")}`,
-    "i",
-  ).test(text);
+function isCodeNegated(text, definition) {
+  if (
+    definition.action === "REQUEST_RESOURCE" &&
+    definition.actionValue === "LAW_ENFORCEMENT" &&
+    /\b(?:no|negative|disregard|cancel|hold|do not|don't|i don't need|i do not need|i'm good)\b[^.!?;]{0,60}\b(?:additional|backup|further|more|other)?\s*units?\b/i.test(
+      text,
+    )
+  )
+    return true;
+  const forms = [definition.code, definition.meaning, ...definition.aliases, ...definition.spokenForms]
+    .filter(Boolean)
+    .sort((left, right) => right.length - left.length);
+  return forms.some((form) =>
+    new RegExp(
+      `\\b(?:no|negative|disregard|cancel|do not|don't)\\b[^,.!?;]{0,40}${escapePattern(form).replaceAll(" ", "\\s+").replaceAll("-", "[\\s-]?")}`,
+      "i",
+    ).test(text),
+  );
 }
 function buildConfiguredIncident(definition, location) {
   const priority = definition.priority ?? 2;
@@ -327,8 +342,8 @@ export function parseResources(text, defaultResponseCode = 2) {
     resources,
     text,
     "FIRE",
-    /\b(?:(?:start|send|request(?:ing)?|need|have)\s+(?:the\s+)?(?:fire department|fire|fd)|requesting\b[^.!?]*\b(?:fire department|fd)|10\s*-?\s*77)\b/i,
-    /\b(?:no|negative|cancel|disregard)\b[^.!?]*\b(?:fire department|fire|fd|10\s*-?\s*77)\b/i,
+    /\b(?:(?:start|send|request(?:ing)?|need|have)\s+(?:the\s+)?(?:fire department|fire|fd)|requesting\b[^.!?]*\b(?:fire department|fd)|10\s*-?\s*53)\b/i,
+    /\b(?:no|negative|cancel|disregard)\b[^.!?]*\b(?:fire department|fire|fd|10\s*-?\s*53)\b/i,
     "INCIDENT_RESPONSE",
     responseMode,
     disposition,
@@ -447,8 +462,8 @@ export function parseResources(text, defaultResponseCode = 2) {
     resources,
     text,
     "CORONER",
-    /\b(?:(?:request|requesting|send|start|need|notify)\s+(?:the )?(?:coroner|medical examiner)|10\s*-?\s*66)\b/i,
-    /\b(?:no|negative|cancel|disregard|hold|do not|don't)\b[^.!?]*\b(?:coroner|medical examiner|10\s*-?\s*66)\b/i,
+    /\b(?:request|requesting|send|start|need|notify)\s+(?:the )?(?:coroner|medical examiner)\b/i,
+    /\b(?:no|negative|cancel|disregard|hold|do not|don't)\b[^.!?]*\b(?:coroner|medical examiner)\b/i,
     "DEATH_INVESTIGATION",
     responseMode,
     disposition,
@@ -1074,14 +1089,14 @@ function parseWarrant(text) {
 
 function parsePursuit(text, location) {
   if (
-    !/\b(?:pursuit|failing to stop|fleeing vehicle|terminate pursuit|pursuit terminated|foot chase|foot pursuit|bailed out)\b/i.test(
+    !/\b(?:pursuit|failing to stop|fleeing vehicle|terminate pursuit|pursuit terminated|foot chase|foot pursuit|bailed out|10[ -]?(?:70|80))\b/i.test(
       text,
     )
   )
     return null;
   return {
     active: !/\b(?:terminate|terminated|discontinue|ended)\b/i.test(text),
-    type: /\b(?:foot chase|foot pursuit|bailed out|bailout)\b/i.test(text) ? "FOOT" : "VEHICLE",
+    type: /\b(?:foot chase|foot pursuit|bailed out|bailout|10[ -]?70)\b/i.test(text) ? "FOOT" : "VEHICLE",
     direction: text.match(DIRECTIONS)?.[1] ?? null,
     lastLocation: location,
     road: location,

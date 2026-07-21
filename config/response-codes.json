@@ -21,15 +21,15 @@
     "aliases": ["emergency response", "lights and siren"]
   },
   "Code 4": {
-    "meaning": "Scene Secure",
+    "meaning": "Scene Handled",
     "category": "SCENE_STATUS",
     "action": "RESOLVE_SCENE",
     "actionValue": "CODE_4",
     "requiresCall": true,
-    "aliases": ["scene secure", "under control"]
+    "aliases": ["scene handled", "scene secure"]
   },
   "Code 5": {
-    "meaning": "Felony Stop",
+    "meaning": "Felony Stop / High Risk Stop",
     "category": "OFFICER_SAFETY",
     "action": "UPGRADE_FELONY_STOP",
     "actionValue": "FELONY_STOP",
@@ -37,6 +37,13 @@
     "responseCode": 3,
     "requiresCall": true,
     "createsCall": true,
-    "aliases": ["felony stop", "high risk stop", "vehicle extraction", "armed vehicle stop"]
+    "aliases": ["felony stop", "high risk stop", "high-risk stop", "vehicle extraction", "armed vehicle stop"]
+  },
+  "Code 6": {
+    "meaning": "In The Area",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "IN_AREA",
+    "aliases": ["in the area", "in area"]
   }
 }

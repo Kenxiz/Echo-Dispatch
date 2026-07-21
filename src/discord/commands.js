@@ -1,6 +1,28 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { CALL_STATUSES, RESOURCE_TYPES, RESPONSE_MODES, SCENE_STATUSES, UNIT_STATUSES } from "../types.js";
-const statusChoices = UNIT_STATUSES.map((status) => ({ name: status.replaceAll("_", " "), value: status }));
+const agencyStatusChoices = new Set([
+  "AVAILABLE",
+  "BUSY",
+  "OUT_OF_SERVICE",
+  "STANDBY",
+  "ON_DUTY",
+  "OFF_DUTY",
+  "EN_ROUTE",
+  "ON_SCENE",
+  "ASSIGNMENT_COMPLETE",
+  "TRAFFIC_STOP",
+  "RADAR",
+  "PURSUIT",
+  "TRANSPORTING",
+  "PARK_WALK_TALK",
+  "DELAYED",
+  "IN_AREA",
+  "EMERGENCY",
+]);
+const statusChoices = UNIT_STATUSES.filter((status) => agencyStatusChoices.has(status)).map((status) => ({
+  name: status.replaceAll("_", " "),
+  value: status,
+}));
 const responseModeChoices = RESPONSE_MODES.map((status) => ({ name: status.replaceAll("_", " "), value: status }));
 const callStatusChoices = CALL_STATUSES.filter((status) => status !== "CLOSED").map((status) => ({
   name: status.replaceAll("_", " "),

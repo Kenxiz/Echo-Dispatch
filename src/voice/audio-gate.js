@@ -1,7 +1,7 @@
 export const EMERGENCY_TRAFFIC_PATTERN =
-  /\b(?:emergency traffic|officer (?:needs help|down)|shots? fired|started shooting|gunfire|send everybody|hold the air|priority traffic|need units now|assist officer|being shot at|taking fire|under fire|can't breathe|cannot breathe|not breathing)\b/i;
+  /\b(?:10-13|10-99|signal 100|emergency traffic|officer (?:needs help|down)|shots? fired|started shooting|gunfire|send everybody|hold the air|priority traffic|need units now|assist officer|being shot at|taking fire|under fire|can't breathe|cannot breathe|not breathing)\b/i;
 export const OFFICER_PANIC_PATTERN =
-  /\b(?:10-33|mass panic|panic (?:button|alarm|traffic)|emergency traffic|officer (?:needs help|down|in distress)|shots? fired|started shooting|gunfire|being shot at|taking fire|under fire|assist officer|send everybody|need units now|can't breathe|cannot breathe|not breathing)\b/i;
+  /\b(?:10-99|mass panic|panic (?:button|alarm|traffic)|emergency traffic|officer (?:needs help|down|in distress)|shots? fired|started shooting|gunfire|being shot at|taking fire|under fire|assist officer|send everybody|need units now|can't breathe|cannot breathe|not breathing)\b/i;
 
 export function analyzePcm16Mono(buffer, sampleRate = 48_000, activityThreshold = 450) {
   const sampleCount = Math.floor(buffer.length / 2);
@@ -60,22 +60,24 @@ export function isOfficerPanicTraffic(transcript) {
 export function classifyEmergencyTraffic(transcript) {
   const text = String(transcript ?? "");
   if (
-    /\b(?:panic(?:,\s*panic){1,}|10-33|mass panic|panic (?:button|alarm|traffic)|officer (?:down|needs help|in distress)|being shot at|shots? fired (?:at|toward) (?:me|us|my)|taking fire|under fire|send everybody|requesting all units|need units now|assist officer|vehicle (?:is )?attempting to ram (?:me|the officer)|unit not responding after (?:a )?panic)\b/i.test(
+    /\b(?:panic(?:,\s*panic){1,}|10-99|mass panic|panic (?:button|alarm|traffic)|officer (?:down|needs help|in distress)|being shot at|shots? fired (?:at|toward) (?:me|us|my)|taking fire|under fire|send everybody|requesting all units|need units now|assist officer|vehicle (?:is )?attempting to ram (?:me|the officer)|unit not responding after (?:a )?panic)\b/i.test(
       text,
     )
   )
     return { kind: "OFFICER_PANIC", priority: 1, description: describeOfficerPanic(text) };
   if (
-    /\b(?:shots? fired|gunfire|started shooting|active gunm[ae]n|suspect has (?:a )?gun|person with (?:a )?gun|vehicle attempting to ram|officer not responding)\b/i.test(
+    /\b(?:10-13|signal 100|shots? fired|gunfire|started shooting|active gunm[ae]n|suspect has (?:a )?gun|person with (?:a )?gun|vehicle attempting to ram|officer not responding)\b/i.test(
       text,
     )
   )
     return {
       kind: "URGENT_OFFICER_SAFETY",
       priority: 1,
-      description: /\bshots? fired|gunfire|shooting\b/i.test(text)
+      description: /\b10-13|shots? fired|gunfire|shooting\b/i.test(text)
         ? "reports shots fired"
-        : "reports an armed or immediate threat",
+        : /\bsignal 100\b/i.test(text)
+          ? "declared emergency traffic only"
+          : "reports an armed or immediate threat",
     };
   if (/\b(?:emergency traffic|help|priority traffic)\b/i.test(text))
     return { kind: "OFFICER_PANIC", priority: 1, description: "declared emergency traffic" };
@@ -87,7 +89,7 @@ export function describeOfficerPanic(transcript) {
   if (/\b(?:started shooting|gunfire)\b/i.test(transcript)) return "reports active gunfire";
   if (/\bofficer down\b/i.test(transcript)) return "reports an officer down";
   if (/\bshots? fired\b/i.test(transcript)) return "reports shots fired";
-  if (/\b(?:10-33|panic (?:button|alarm|traffic)|mass panic)\b/i.test(transcript)) return "activated an officer panic";
+  if (/\b(?:10-99|panic (?:button|alarm|traffic)|mass panic)\b/i.test(transcript)) return "activated an officer panic";
   return "declared emergency traffic";
 }
 
@@ -111,7 +113,7 @@ export function containsDispatchInformation(transcript, callsign = "") {
   if (!text) return false;
   const compactCallsign = callsign.toUpperCase().replace(/[^A-Z0-9]/g, "");
   if (compactCallsign && compactSpokenRadioText(text).includes(compactCallsign)) return true;
-  return /\b(?:dispatch|unit|radio|traffic|priority|emergency|10\s*-?\s*\d+|signal\s+\d+|code\s*[1-4]|show\s+me|be\s+on\s+the\s+lookout|b\.?o\.?l\.?o\.?(?:s)?|unable\s+to\s+(?:find|locate)|no\s+suspect|suspect|subject|victim|caller|vehicle|plate|tag|weapon|gun|knife|injur(?:y|ed)|bleeding|last\s+seen|direction\s+of\s+travel|heading\s+(?:north|south|east|west)|northbound|southbound|eastbound|westbound|on\s+foot|vicinity|scene|en\s+route|responding|arrived|clear|available|busy|out\s+of\s+service|standby|request(?:ing)?|need\s+(?:another|backup|ems|fire|tow|supervisor|units?)|send\s+(?:another|backup|ems|fire|units?)|pursuit|traffic\s+stop|felony\s+stop|detain(?:ed|ing)?|custody|transport|location|postal|intersection|street|st\.?|road|rd\.?|avenue|ave\.?|boulevard|blvd\.?|drive|dr\.?|court|ct\.?|lane|ln\.?|highway|route|county\s+jail|station|hospital|bank|gas\s+station|school|residence|address|north|south|east|west|copy|affirmative|negative|repeat|10-9)\b/i.test(
+  return /\b(?:dispatch|unit|radio|traffic|priority|emergency|10\s*-?\s*\d+|11\s*-?\s*44|signal\s+\d+|code\s*[1-6]|show\s+me|be\s+on\s+the\s+lookout|b\.?o\.?l\.?o\.?(?:s)?|unable\s+to\s+(?:find|locate)|no\s+suspect|suspect|subject|victim|caller|vehicle|plate|tag|weapon|gun|knife|injur(?:y|ed)|bleeding|last\s+seen|direction\s+of\s+travel|heading\s+(?:north|south|east|west)|northbound|southbound|eastbound|westbound|on\s+foot|vicinity|scene|en\s+route|responding|arrived|clear|available|busy|out\s+of\s+service|standby|request(?:ing)?|need\s+(?:another|backup|ems|fire|tow|supervisor|units?)|send\s+(?:another|backup|ems|fire|units?)|pursuit|traffic\s+stop|felony\s+stop|detain(?:ed|ing)?|custody|transport|location|postal|intersection|street|st\.?|road|rd\.?|avenue|ave\.?|boulevard|blvd\.?|drive|dr\.?|court|ct\.?|lane|ln\.?|highway|route|county\s+jail|station|hospital|bank|gas\s+station|school|residence|address|north|south|east|west|copy|affirmative|negative|repeat|10-9)\b/i.test(
     text,
   );
 }

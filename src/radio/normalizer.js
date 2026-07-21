@@ -70,9 +70,9 @@ export function normalizeRadioTransmission(rawTranscript, unit, codebook) {
   }
   const unknownCodes = [
     ...new Set(
-      [...traffic.matchAll(/\b10[\s-]?(\d{1,3})\b/gi)]
+      [...traffic.matchAll(/\b(10|11)[\s-]?(\d{1,3})\b/gi)]
         .filter((match) => !looksLikeStreetNumber(traffic, match))
-        .map((match) => `10-${Number(match[1])}`)
+        .map((match) => `${match[1]}-${Number(match[2])}`)
         .filter((code) => !codebook?.get(code)),
     ),
   ];

@@ -20,6 +20,8 @@ export const RADIO_CODE_ACTIONS = [
   "RESOLVE_SCENE",
   "SET_UNIT_ACTIVITY",
   "UPGRADE_FELONY_STOP",
+  "ACKNOWLEDGE_CODE",
+  "SET_SCENE_STATUS",
 ];
 
 const codeDefinitionSchema = z.object({
@@ -41,54 +43,53 @@ const STATUS_ACTIONS = {
   "10-6": "BUSY",
   "10-7": "OUT_OF_SERVICE",
   "10-8": "AVAILABLE",
-  "10-11": "ON_DUTY",
   "10-12": "STANDBY",
-  "10-17": "EN_ROUTE",
+  "10-15": "TRANSPORTING",
   "10-23": "ON_SCENE",
-  "10-24": "ASSIGNMENT_COMPLETE",
+  "10-34": "ASSIGNMENT_COMPLETE",
+  "10-37": "ASSIGNMENT_COMPLETE",
   "10-41": "ON_DUTY",
   "10-42": "OFF_DUTY",
-  "10-43": "PURSUIT",
-  "10-48": "DETAINING",
-  "10-58": "DIRECTING_TRAFFIC",
-  "10-59": "ESCORT",
-  "10-72": "PRISONER_IN_CUSTODY",
-  "10-81": "AT_STATION",
-  "10-92": "RADAR",
-  "10-96": "MEAL_BREAK",
-  "10-97": "AT_HOSPITAL",
-  "10-106": "COURT",
-  "10-107": "VEHICLE_MAINTENANCE",
-  "10-108": "BUILDING_CHECK",
+  "10-44": "PARK_WALK_TALK",
+  "10-76": "EN_ROUTE",
+  "10-85": "DELAYED",
+  "Signal 11": "RADAR",
+  "Code 6": "IN_AREA",
 };
 const RESOURCE_ACTIONS = {
   "10-32": "LAW_ENFORCEMENT",
   "10-51": "WRECKER",
   "10-52": "EMS",
-  "10-66": "CORONER",
-  "10-77": "FIRE",
+  "10-53": "FIRE",
+  "10-71": "SUPERVISOR",
+  "10-88": "COUNTY",
+  "10-89": "LAW_ENFORCEMENT",
+  "10-97": "PRISONER_TRANSPORT",
 };
 const INFORMATION_ACTIONS = {
   "10-20": "LOCATION",
+  "10-25": "CONTACT_STATUS",
   "10-26": "ETA",
   "10-27": "LICENSE",
   "10-28": "REGISTRATION",
   "10-29": "WARRANT_RECORD",
+  "10-73": "UNIT_STATUS",
+  "10-86": "PENDING_TRAFFIC",
 };
 const INCIDENT_CODES = new Set([
-  "10-35",
-  "10-36",
-  "10-37",
+  "10-0",
+  "10-10",
+  "10-11",
+  "10-13",
+  "10-16",
+  "10-17",
+  "10-18",
+  "10-30",
+  "10-31",
   "10-38",
-  "10-39",
-  "10-40",
-  "10-43",
-  "10-44",
   "10-45",
   "10-46",
-  "10-49",
   "10-50",
-  "10-53",
   "10-54",
   "10-55",
   "10-56",
@@ -97,34 +98,26 @@ const INCIDENT_CODES = new Set([
   "10-62",
   "10-64",
   "10-65",
+  "10-66",
   "10-67",
-  "10-68",
   "10-70",
-  "10-73",
-  "10-74",
-  "10-75",
-  "10-76",
-  "10-79",
   "10-80",
-  "10-82",
-  "10-85",
-  "10-88",
-  "10-89",
   "10-90",
-  "10-91",
-  "10-93",
   "10-94",
+  "11-44",
 ]);
 const PRIORITY_ONE_CODES = new Set([
-  "10-33",
-  "10-43",
-  "10-44",
+  "10-10",
+  "10-13",
+  "10-31",
   "10-45",
-  "10-64",
+  "10-60",
+  "10-62",
   "10-65",
-  "10-74",
-  "10-82",
-  "10-93",
+  "10-67",
+  "10-70",
+  "10-80",
+  "10-90",
   "10-94",
 ]);
 
@@ -308,8 +301,28 @@ function inferSemantics(code) {
   if (RESOURCE_ACTIONS[code])
     return semantics("REQUEST", "REQUEST_RESOURCE", RESOURCE_ACTIONS[code], 2, 2, true, false);
   if (INFORMATION_ACTIONS[code]) return semantics("INFORMATION", "REQUEST_INFORMATION", INFORMATION_ACTIONS[code]);
-  if (code === "10-33") return semantics("OFFICER_SAFETY", "ACTIVATE_EMERGENCY", "OFFICER_ASSIST", 1, 3, false, true);
-  if (code === "10-71") return semantics("INFORMATION", "SET_UNIT_ACTIVITY", "IMPROPER_RADIO_USE");
+  if (code === "10-99") return semantics("OFFICER_SAFETY", "ACTIVATE_EMERGENCY", "OFFICER_ASSIST", 1, 3, false, true);
+  if (code === "10-36") return semantics("SCENE_STATUS", "SET_SCENE_STATUS", "STABILIZED", null, null, true);
+  if (["10-19", "10-91", "Signal 100"].includes(code)) return semantics("INFORMATION", "SET_UNIT_ACTIVITY", null);
+  if (
+    [
+      "10-1",
+      "10-2",
+      "10-3",
+      "10-4",
+      "10-5",
+      "10-9",
+      "10-21",
+      "10-22",
+      "10-35",
+      "10-39",
+      "10-43",
+      "10-63",
+      "10-93",
+      "Signal 13",
+    ].includes(code)
+  )
+    return semantics("INFORMATION", "ACKNOWLEDGE_CODE", null);
   if (code === "Code 1" || code === "Code 2" || code === "Code 3")
     return semantics("RESPONSE", "SET_RESPONSE_MODE", code.toUpperCase().replace(" ", "_"));
   if (code === "Code 4") return semantics("SCENE_STATUS", "RESOLVE_SCENE", "CODE_4", null, null, true);
@@ -342,6 +355,8 @@ function canonicalCode(value) {
   const text = String(value ?? "").trim();
   const ten = text.match(/^10[\s-]?(\d{1,3})$/i);
   if (ten) return `10-${Number(ten[1])}`;
+  const eleven = text.match(/^11[\s-]?(\d{1,3})$/i);
+  if (eleven) return `11-${Number(eleven[1])}`;
   const code = text.match(/^code[\s-]?(\d+)$/i);
   if (code) return `Code ${Number(code[1])}`;
   const signal = text.match(/^signal[\s-]?(\d+)$/i);
@@ -349,16 +364,17 @@ function canonicalCode(value) {
   return text;
 }
 function generatedSpokenForms(code) {
-  const ten = code.match(/^10-(\d+)$/);
-  if (ten) {
-    const suffix = ten[1];
+  const numeric = code.match(/^(10|11)-(\d+)$/);
+  if (numeric) {
+    const prefix = numeric[1];
+    const suffix = numeric[2];
     return [
-      `10-${suffix}`,
-      `10 ${suffix}`,
-      `10${suffix}`,
-      `ten ${numberWords(Number(suffix))}`,
-      `ten ${suffix.split("").map(digitWord).join(" ")}`,
-      `one zero ${suffix.split("").map(digitWord).join(" ")}`,
+      `${prefix}-${suffix}`,
+      `${prefix} ${suffix}`,
+      `${prefix}${suffix}`,
+      `${numberWords(Number(prefix))} ${numberWords(Number(suffix))}`,
+      `${numberWords(Number(prefix))} ${suffix.split("").map(digitWord).join(" ")}`,
+      `${prefix.split("").map(digitWord).join(" ")} ${suffix.split("").map(digitWord).join(" ")}`,
     ];
   }
   return [code, code.toLowerCase()];

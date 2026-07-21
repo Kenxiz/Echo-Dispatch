@@ -1,120 +1,572 @@
 {
-  "10-1": { "meaning": "Signal Weak", "aliases": ["weak signal", "unreadable"] },
-  "10-2": { "meaning": "Signal Good", "aliases": ["good signal", "loud and clear"] },
-  "10-3": { "meaning": "Stop Transmitting", "aliases": ["stop transmitting", "hold the air"] },
-  "10-4": { "meaning": "Affirmative", "aliases": ["copy", "received", "affirmative"] },
-  "10-5": { "meaning": "Relay", "aliases": ["relay"] },
+  "10-0": {
+    "meaning": "Disappeared",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "MISSING_PERSON",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["disappeared", "missing person", "missing subject"]
+  },
+  "10-1": {
+    "meaning": "Frequency Change",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "FREQUENCY_CHANGE",
+    "aliases": ["frequency change", "change frequency", "switch frequency"]
+  },
+  "10-2": {
+    "meaning": "Negative",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "NEGATIVE",
+    "aliases": ["negative"]
+  },
+  "10-3": {
+    "meaning": "Stop Transmitting",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "STOP_TRANSMITTING",
+    "aliases": ["stop transmitting", "hold the air"]
+  },
+  "10-4": {
+    "meaning": "Acknowledged",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "ACKNOWLEDGED",
+    "aliases": ["acknowledged", "copy", "received"]
+  },
+  "10-5": {
+    "meaning": "Relay Message",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "RELAY_MESSAGE",
+    "aliases": ["relay message", "relay"]
+  },
   "10-6": { "meaning": "Busy", "aliases": ["busy"] },
   "10-7": { "meaning": "Out of Service", "aliases": ["out of service", "off duty"] },
-  "10-8": { "meaning": "In Service", "aliases": ["available", "in service"] },
-  "10-9": { "meaning": "Repeat", "aliases": ["repeat", "say again"] },
-  "10-10": { "meaning": "Negative", "aliases": ["negative"] },
-  "10-11": { "meaning": "On Duty", "aliases": ["on duty"] },
-  "10-12": { "meaning": "Standby", "aliases": ["stand by"] },
-  "10-13": { "meaning": "Existing Conditions", "aliases": ["conditions"] },
-  "10-14": { "meaning": "Message or Information", "aliases": ["message", "information"] },
-  "10-15": { "meaning": "Message Delivered", "aliases": ["message delivered"] },
-  "10-16": { "meaning": "Reply to Message", "aliases": ["reply to message"] },
-  "10-17": { "meaning": "Enroute", "aliases": ["en route", "responding"] },
-  "10-18": { "meaning": "Urgent", "aliases": ["urgent"] },
-  "10-19": { "meaning": "In Contact", "aliases": ["in contact"] },
+  "10-8": { "meaning": "In Service", "aliases": ["in service", "available"] },
+  "10-9": {
+    "meaning": "Repeat",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "REPEAT",
+    "aliases": ["repeat", "say again"]
+  },
+  "10-10": {
+    "meaning": "Fight in Progress",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "FIGHT",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["fight in progress", "active fight", "subjects fighting"]
+  },
+  "10-11": {
+    "meaning": "Traffic Stop",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "TRAFFIC_STOP",
+    "priority": 3,
+    "responseCode": 1,
+    "createsCall": true,
+    "aliases": ["traffic stop", "vehicle stop"]
+  },
+  "10-12": { "meaning": "Standby", "aliases": ["standby", "stand by"] },
+  "10-13": {
+    "meaning": "Shots Fired",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "SHOTS_FIRED",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["shots fired", "gunfire"]
+  },
+  "10-15": {
+    "meaning": "Subject in Custody En Route to Station",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "TRANSPORTING",
+    "aliases": ["subject in custody en route to station", "prisoner en route to station", "transporting to station"]
+  },
+  "10-16": {
+    "meaning": "Stolen Vehicle",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "VEHICLE_THEFT",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["stolen vehicle", "vehicle theft", "auto theft"]
+  },
+  "10-17": {
+    "meaning": "Suspicious Circumstances (Suspicious Person)",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "SUSPICIOUS_PERSON",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["suspicious circumstances", "suspicious person", "suspicious subject"]
+  },
+  "10-18": {
+    "meaning": "Disturbance",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "DISTURBANCE",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["disturbance", "disorderly subject"]
+  },
+  "10-19": {
+    "meaning": "Active Ride Along",
+    "category": "INFORMATION",
+    "action": "SET_UNIT_ACTIVITY",
+    "actionValue": "RIDE_ALONG",
+    "aliases": ["active ride along", "ride along"]
+  },
   "10-20": { "meaning": "Location", "aliases": ["location", "what is your location"] },
-  "10-21": { "meaning": "Call by Telephone", "aliases": ["call by phone", "telephone"] },
-  "10-22": { "meaning": "Disregard", "aliases": ["disregard", "cancel"] },
-  "10-23": { "meaning": "On Scene", "aliases": ["on scene", "arrived"] },
-  "10-24": { "meaning": "Assignment Completed", "aliases": ["assignment complete", "clear assignment"] },
-  "10-25": { "meaning": "Report To/Meet", "aliases": ["report to", "meet"] },
-  "10-26": { "meaning": "Estimated Time of Arrival", "aliases": ["ETA", "estimated time of arrival"] },
-  "10-27": { "meaning": "License Information", "aliases": ["license information", "driver license"] },
-  "10-28": { "meaning": "Registration Information", "aliases": ["registration information", "vehicle registration"] },
-  "10-29": { "meaning": "Warrant/Record Check", "aliases": ["warrant check", "record check"] },
-  "10-30": { "meaning": "Danger/Caution", "aliases": ["danger", "caution"] },
-  "10-31": { "meaning": "Pick Up", "aliases": ["pick up"] },
-  "10-32": { "meaning": "Units Needed", "aliases": ["units needed", "additional units"] },
-  "10-33": { "meaning": "Help Quick", "aliases": ["help quick", "officer needs help", "emergency traffic"] },
-  "10-34": { "meaning": "Time", "aliases": ["time check"] },
-  "10-35": { "meaning": "Vandalism", "aliases": ["vandalism"] },
-  "10-36": { "meaning": "Larceny", "aliases": ["larceny", "theft"] },
-  "10-37": { "meaning": "Damage to Property", "aliases": ["property damage"] },
-  "10-38": { "meaning": "Assault", "aliases": ["assault"] },
-  "10-39": { "meaning": "Juvenile Case", "aliases": ["juvenile case"] },
-  "10-40": { "meaning": "Fight", "aliases": ["fight"] },
-  "10-41": { "meaning": "Beginning Tour of Duty", "aliases": ["beginning tour", "starting shift"] },
-  "10-42": { "meaning": "Ending Tour of Duty", "aliases": ["ending tour", "ending shift"] },
-  "10-43": { "meaning": "Chase", "aliases": ["chase", "pursuit"] },
-  "10-44": { "meaning": "Riot", "aliases": ["riot"] },
-  "10-45": { "meaning": "Bomb Threat", "aliases": ["bomb threat"] },
-  "10-46": { "meaning": "Bank Alarm", "aliases": ["bank alarm"] },
-  "10-47": { "meaning": "Complete Assignment", "aliases": ["complete assignment"] },
-  "10-48": { "meaning": "Detaining Subject/Expedite", "aliases": ["detaining subject", "expedite"] },
-  "10-49": { "meaning": "Drag Racing", "aliases": ["drag racing"] },
+  "10-21": {
+    "meaning": "Call/Check Discord",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "CHECK_DISCORD",
+    "aliases": ["check discord", "call on discord"]
+  },
+  "10-22": {
+    "meaning": "Disregard",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "DISREGARD",
+    "aliases": ["disregard", "cancel last traffic"]
+  },
+  "10-23": { "meaning": "Arrived on Scene", "aliases": ["arrived on scene", "on scene", "arrived"] },
+  "10-25": {
+    "meaning": "Do You Have Contact With?",
+    "category": "INFORMATION",
+    "action": "REQUEST_INFORMATION",
+    "actionValue": "CONTACT_STATUS",
+    "aliases": ["do you have contact with", "contact status"]
+  },
+  "10-26": { "meaning": "ETA", "aliases": ["eta", "estimated time of arrival"] },
+  "10-27": {
+    "meaning": "Driver's License Check for Valid",
+    "aliases": ["driver license check", "drivers license check", "license check"]
+  },
+  "10-28": {
+    "meaning": "Vehicle License Plate Check",
+    "aliases": ["vehicle license plate check", "plate check", "registration check"]
+  },
+  "10-29": { "meaning": "NCIC Warrant Check", "aliases": ["ncic warrant check", "warrant check", "record check"] },
+  "10-30": {
+    "meaning": "Wanted Person",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "WANTED_PERSON",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["wanted person", "wanted subject"]
+  },
+  "10-31": {
+    "meaning": "Dangerous/Armed Person",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "ARMED_PERSON",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["dangerous person", "armed person", "person with a gun", "subject with a gun"]
+  },
+  "10-32": {
+    "meaning": "Additional Unit Requested",
+    "aliases": ["additional unit requested", "additional unit", "request backup"]
+  },
+  "10-34": {
+    "meaning": "Completed Assignment - No Report",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "ASSIGNMENT_COMPLETE",
+    "aliases": ["completed assignment no report", "assignment complete no report"]
+  },
+  "10-35": {
+    "meaning": "Not Wanted/No Warrants",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "NOT_WANTED",
+    "aliases": ["not wanted", "no warrants", "negative warrants"]
+  },
+  "10-36": {
+    "meaning": "Situation Under Control",
+    "category": "SCENE_STATUS",
+    "action": "SET_SCENE_STATUS",
+    "actionValue": "STABILIZED",
+    "requiresCall": true,
+    "aliases": ["situation under control", "under control"]
+  },
+  "10-37": {
+    "meaning": "Completed Last Assignment",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "ASSIGNMENT_COMPLETE",
+    "aliases": ["completed last assignment", "last assignment complete"]
+  },
+  "10-38": {
+    "meaning": "Suspicious Vehicle",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "SUSPICIOUS_VEHICLE",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["suspicious vehicle"]
+  },
+  "10-39": {
+    "meaning": "Police Officer",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "POLICE_OFFICER",
+    "aliases": ["police officer"]
+  },
+  "10-41": {
+    "meaning": "Beginning Tour of Duty",
+    "aliases": ["beginning tour of duty", "beginning tour", "starting shift"]
+  },
+  "10-42": { "meaning": "Ending Tour of Duty", "aliases": ["ending tour of duty", "ending tour", "ending shift"] },
+  "10-43": {
+    "meaning": "Information About?",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "INFORMATION_REQUEST",
+    "aliases": ["information about"]
+  },
+  "10-44": {
+    "meaning": "Park, Walk, & Talk",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "PARK_WALK_TALK",
+    "aliases": ["park walk and talk", "park walk talk"]
+  },
+  "10-45": {
+    "meaning": "Street Race",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "STREET_RACE",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["street race", "street racing", "drag racing"]
+  },
+  "10-46": {
+    "meaning": "EDP (Emotionally Disturbed Person)",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "EDP",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["emotionally disturbed person", "edp", "mental health subject"]
+  },
   "10-50": {
-    "meaning": "Motor Vehicle Accident",
-    "aliases": ["MVA", "motor vehicle accident", "vehicle collision", "crash", "wreck"]
+    "meaning": "Vehicle Accident",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "MOTOR_VEHICLE_ACCIDENT",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["vehicle accident", "motor vehicle accident", "mva", "collision", "crash", "wreck"]
   },
-  "10-51": { "meaning": "Wrecker Needed", "aliases": ["wrecker needed", "tow truck"] },
-  "10-52": { "meaning": "Ambulance Needed", "aliases": ["ambulance needed", "request EMS"] },
-  "10-53": { "meaning": "Roadway Blocked", "aliases": ["roadway blocked", "road blocked"] },
-  "10-54": { "meaning": "Hit and Run", "aliases": ["hit and run"] },
-  "10-55": { "meaning": "Intoxicated Driver", "aliases": ["intoxicated driver", "DUI"] },
-  "10-56": { "meaning": "Intoxicated Pedestrian", "aliases": ["intoxicated pedestrian"] },
-  "10-57": { "meaning": "Intoxilyzer Operator", "aliases": ["intoxilyzer operator"] },
-  "10-58": { "meaning": "Direct Traffic", "aliases": ["direct traffic", "traffic control"] },
-  "10-59": { "meaning": "Escort", "aliases": ["escort"] },
-  "10-60": { "meaning": "Investigate Suspicious", "aliases": ["investigate suspicious", "suspicious activity"] },
-  "10-61": { "meaning": "Traffic Stop", "aliases": ["traffic stop", "vehicle stop"] },
-  "10-62": { "meaning": "Breaking and Entering", "aliases": ["breaking and entering", "burglary"] },
-  "10-63": { "meaning": "Investigate at Location", "aliases": ["investigate"] },
-  "10-64": { "meaning": "Crime in Progress", "aliases": ["crime in progress"] },
-  "10-65": { "meaning": "Armed Robbery", "aliases": ["armed robbery"] },
-  "10-66": { "meaning": "Notify Medical Examiner", "aliases": ["notify medical examiner"] },
-  "10-67": { "meaning": "Investigate Report of Death", "aliases": ["reported death", "investigate death"] },
-  "10-68": { "meaning": "Livestock in Roadway", "aliases": ["livestock in roadway"] },
-  "10-69": { "meaning": "Advise Present Telephone Number", "aliases": ["telephone number", "phone number"] },
-  "10-70": { "meaning": "Improperly Parked Vehicle", "aliases": ["improperly parked vehicle", "parking complaint"] },
-  "10-71": { "meaning": "Improper Use of Radio", "aliases": ["improper radio use"] },
-  "10-72": { "meaning": "Prisoner in Custody", "aliases": ["prisoner in custody"] },
-  "10-73": { "meaning": "Mental Subject", "aliases": ["mental subject", "mental health call"] },
-  "10-74": { "meaning": "Prison/Jail Break", "aliases": ["jail break", "prison break"] },
-  "10-75": { "meaning": "Wanted/Stolen", "aliases": ["wanted", "stolen"] },
-  "10-76": { "meaning": "Prowler", "aliases": ["prowler"] },
-  "10-77": { "meaning": "Assist Fire Department", "aliases": ["assist fire department"] },
-  "10-78": { "meaning": "Assist Other Department", "aliases": ["assist other department", "agency assist"] },
-  "10-79": { "meaning": "Civil Disturbance", "aliases": ["civil disturbance"] },
-  "10-80": { "meaning": "Domestic Disturbance", "aliases": ["domestic disturbance", "domestic"] },
-  "10-81": { "meaning": "Return to Office", "aliases": ["return to office", "return to station"] },
-  "10-82": { "meaning": "Person With Gun (10-85 with NCHP)", "aliases": ["person with a gun", "subject with gun"] },
-  "10-83": { "meaning": "Silent Run", "aliases": ["silent run"] },
-  "10-84": { "meaning": "Permission to Leave", "aliases": ["permission to leave"] },
-  "10-85": { "meaning": "Stranded Motorist", "aliases": ["stranded motorist", "motorist assist"] },
-  "10-86": { "meaning": "Personnel in Area", "aliases": ["personnel in area"] },
-  "10-87": { "meaning": "Message Received", "aliases": ["message received"] },
-  "10-88": { "meaning": "Fire at Location", "aliases": ["fire at"] },
-  "10-89": { "meaning": "Dog Call", "aliases": ["dog call"] },
-  "10-90": { "meaning": "Alarm", "aliases": ["alarm"] },
-  "10-91": { "meaning": "Animal Carcass at Location", "aliases": ["animal carcass"] },
-  "10-92": {
-    "meaning": "Surveillance (Radar)",
-    "aliases": ["radar", "running radar", "speed enforcement", "surveillance"]
+  "10-51": {
+    "meaning": "Request Towing Service",
+    "aliases": ["request towing service", "request tow", "tow truck", "wrecker"]
   },
-  "10-93": { "meaning": "Possible Aircraft Crash", "aliases": ["possible aircraft crash", "aircraft crash"] },
-  "10-94": { "meaning": "Gunshot Wound", "aliases": ["gunshot wound", "GSW"] },
-  "10-95": { "meaning": "Drug Check", "aliases": ["drug check"] },
-  "10-96": { "meaning": "Meal Break", "aliases": ["meal break"] },
-  "10-97": { "meaning": "Hospital Report", "aliases": ["hospital report", "at hospital"] },
-  "10-98": { "meaning": "Civil Process", "aliases": ["civil process"] },
-  "10-99": { "meaning": "Warrant Process", "aliases": ["warrant process"] },
-  "10-105": { "meaning": "Follow-up Investigation", "aliases": ["follow-up investigation", "follow up"] },
-  "10-106": { "meaning": "Court Appearance", "aliases": ["court appearance", "in court"] },
-  "10-107": { "meaning": "Vehicle Maintenance", "aliases": ["vehicle maintenance"] },
-  "10-108": { "meaning": "Building Check", "aliases": ["building check"] },
-  "Signal 11": { "meaning": "Running Radar", "aliases": ["signal 11"] },
+  "10-52": { "meaning": "Request EMS", "aliases": ["request ems", "request ambulance", "ambulance"] },
+  "10-53": {
+    "meaning": "Request Fire Department",
+    "category": "REQUEST",
+    "action": "REQUEST_RESOURCE",
+    "actionValue": "FIRE",
+    "requiresCall": true,
+    "aliases": ["request fire department", "request fire", "fire department"]
+  },
+  "10-54": {
+    "meaning": "Hit and Run",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "HIT_AND_RUN",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["hit and run"]
+  },
+  "10-55": {
+    "meaning": "Intoxicated Driver",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "INTOXICATED_DRIVER",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["intoxicated driver", "drunk driver", "dui"]
+  },
+  "10-56": {
+    "meaning": "Intoxicated Pedestrian",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "INTOXICATED_PEDESTRIAN",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["intoxicated pedestrian", "drunk pedestrian"]
+  },
+  "10-60": {
+    "meaning": "Animal Attack",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "ANIMAL_ATTACK",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["animal attack", "dog attack"]
+  },
+  "10-61": {
+    "meaning": "Larceny",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "LARCENY",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["larceny", "theft"]
+  },
+  "10-62": {
+    "meaning": "Kidnapping",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "KIDNAPPING",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["kidnapping", "abduction"]
+  },
+  "10-63": {
+    "meaning": "Radio Check",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "RADIO_CHECK",
+    "aliases": ["radio check"]
+  },
+  "10-64": {
+    "meaning": "Assault",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "ASSAULT",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["assault"]
+  },
+  "10-65": {
+    "meaning": "Armed Robbery",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "ARMED_ROBBERY",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["armed robbery"]
+  },
+  "10-66": {
+    "meaning": "Reckless Driver",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "RECKLESS_DRIVER",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["reckless driver", "reckless vehicle"]
+  },
+  "10-67": {
+    "meaning": "Fire",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "FIRE",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["structure fire", "building fire", "vehicle fire", "fire reported"]
+  },
+  "10-70": {
+    "meaning": "Foot Pursuit",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "FOOT_PURSUIT",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["foot pursuit", "foot chase"]
+  },
+  "10-71": {
+    "meaning": "Request Supervisor at Scene",
+    "category": "REQUEST",
+    "action": "REQUEST_RESOURCE",
+    "actionValue": "SUPERVISOR",
+    "requiresCall": true,
+    "aliases": ["request supervisor at scene", "supervisor at scene", "request supervisor"]
+  },
+  "10-73": {
+    "meaning": "Advise Status",
+    "category": "INFORMATION",
+    "action": "REQUEST_INFORMATION",
+    "actionValue": "UNIT_STATUS",
+    "aliases": ["advise status", "status check"]
+  },
+  "10-76": {
+    "meaning": "In Route",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "EN_ROUTE",
+    "aliases": ["in route", "en route", "responding"]
+  },
+  "10-80": {
+    "meaning": "Vehicle Pursuit",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "PURSUIT",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["vehicle pursuit", "pursuit", "failing to stop"]
+  },
+  "10-85": {
+    "meaning": "Delay Due To",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "DELAYED",
+    "aliases": ["delay due to", "delayed due to"]
+  },
+  "10-86": {
+    "meaning": "Any Traffic for Me?",
+    "category": "INFORMATION",
+    "action": "REQUEST_INFORMATION",
+    "actionValue": "PENDING_TRAFFIC",
+    "aliases": ["any traffic for me", "any traffic"]
+  },
+  "10-88": {
+    "meaning": "Request District Assistance",
+    "category": "REQUEST",
+    "action": "REQUEST_RESOURCE",
+    "actionValue": "COUNTY",
+    "requiresCall": true,
+    "aliases": ["request district assistance", "district assistance"]
+  },
+  "10-89": {
+    "meaning": "Request Major Assistance",
+    "category": "REQUEST",
+    "action": "REQUEST_RESOURCE",
+    "actionValue": "LAW_ENFORCEMENT",
+    "requiresCall": true,
+    "aliases": ["request major assistance", "major assistance"]
+  },
+  "10-90": {
+    "meaning": "Bank Alarm",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "BANK_ALARM",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["bank alarm"]
+  },
+  "10-91": {
+    "meaning": "Unnecessary Use of Radio",
+    "category": "INFORMATION",
+    "action": "SET_UNIT_ACTIVITY",
+    "actionValue": "UNNECESSARY_RADIO_USE",
+    "aliases": ["unnecessary use of radio", "unnecessary radio use"]
+  },
+  "10-93": {
+    "meaning": "Warning",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "WARNING",
+    "aliases": ["warning"]
+  },
+  "10-94": {
+    "meaning": "Aircraft Emergency",
+    "category": "OFFICER_SAFETY",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "AIRCRAFT_EMERGENCY",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["aircraft emergency", "aircraft crash"]
+  },
+  "10-97": {
+    "meaning": "Request Prisoner Transport",
+    "category": "REQUEST",
+    "action": "REQUEST_RESOURCE",
+    "actionValue": "PRISONER_TRANSPORT",
+    "requiresCall": true,
+    "aliases": ["request prisoner transport", "prisoner transport"]
+  },
+  "10-99": {
+    "meaning": "Officer In Distress",
+    "category": "OFFICER_SAFETY",
+    "action": "ACTIVATE_EMERGENCY",
+    "actionValue": "OFFICER_ASSIST",
+    "priority": 1,
+    "responseCode": 3,
+    "createsCall": true,
+    "aliases": ["officer in distress", "officer needs help", "officer down", "panic activation"]
+  },
+  "11-44": {
+    "meaning": "Person Deceased",
+    "category": "INCIDENT",
+    "action": "CREATE_OR_UPDATE_CALL",
+    "actionValue": "DECEASED_PERSON",
+    "priority": 2,
+    "responseCode": 2,
+    "createsCall": true,
+    "aliases": ["person deceased", "deceased person", "confirmed deceased"]
+  },
+  "Signal 11": {
+    "meaning": "Running Radar",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "RADAR",
+    "aliases": ["running radar"],
+    "spokenForms": ["signal eleven", "signal one one"]
+  },
+  "Signal 13": {
+    "meaning": "Clear for Crime Broadcast",
+    "category": "INFORMATION",
+    "action": "ACKNOWLEDGE_CODE",
+    "actionValue": "CLEAR_CRIME_BROADCAST",
+    "aliases": ["clear for crime broadcast"],
+    "spokenForms": ["signal thirteen", "signal one three"]
+  },
+  "Signal 100": {
+    "meaning": "Emergency Traffic Only",
+    "category": "OFFICER_SAFETY",
+    "action": "SET_UNIT_ACTIVITY",
+    "actionValue": "EMERGENCY_TRAFFIC_ONLY",
+    "priority": 1,
+    "responseCode": 3,
+    "aliases": ["emergency traffic only", "hold the air for emergency traffic"],
+    "spokenForms": ["signal one hundred", "signal one zero zero"]
+  },
   "Code 1": { "meaning": "Routine Response", "aliases": ["routine response", "no lights or siren"] },
   "Code 2": { "meaning": "Urgent Response", "aliases": ["urgent response", "expedited response"] },
   "Code 3": { "meaning": "Emergency Response", "aliases": ["emergency response", "lights and siren"] },
-  "Code 4": { "meaning": "Scene Secure", "aliases": ["scene secure", "under control"] },
+  "Code 4": { "meaning": "Scene Handled", "aliases": ["scene handled", "scene secure"] },
   "Code 5": {
-    "meaning": "Felony Stop",
+    "meaning": "Felony Stop / High Risk Stop",
     "category": "OFFICER_SAFETY",
     "action": "UPGRADE_FELONY_STOP",
     "actionValue": "FELONY_STOP",
@@ -123,5 +575,12 @@
     "requiresCall": true,
     "createsCall": true,
     "aliases": ["felony stop", "high-risk stop", "high risk stop", "vehicle extraction", "armed vehicle stop"]
+  },
+  "Code 6": {
+    "meaning": "In The Area",
+    "category": "UNIT_STATUS",
+    "action": "SET_UNIT_STATUS",
+    "actionValue": "IN_AREA",
+    "aliases": ["in the area", "in area"]
   }
 }

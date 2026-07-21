@@ -71,7 +71,7 @@ export function buildHeatmap(calls) {
     const current = buckets.get(key) ?? { location: key, calls: 0, pursuits: 0, crashes: 0, robberies: 0 };
     current.calls += 1;
     const text = `${call.incident} ${call.description}`;
-    if (/pursuit|10-43/i.test(text)) current.pursuits += 1;
+    if (/pursuit|10-80/i.test(text)) current.pursuits += 1;
     if (/crash|collision|accident|10-50/i.test(text)) current.crashes += 1;
     if (/robbery|10-65/i.test(text)) current.robberies += 1;
     buckets.set(key, current);

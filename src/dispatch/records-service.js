@@ -30,6 +30,20 @@ export class DispatchRecordsService {
       context.informationResult = { type: "ACTIVE_BOLOS", bolos, value: bolos.length };
       return context.informationResult;
     }
+    if (request === "UNIT_STATUS") {
+      context.informationResult = {
+        type: "UNIT_STATUS",
+        value: `${unit.callsign} is ${unit.statusCode ?? unit.status.replaceAll("_", " ")}.`,
+      };
+      return context.informationResult;
+    }
+    if (request === "PENDING_TRAFFIC") {
+      const call = this.resolveContextCall(unit);
+      context.informationResult = call
+        ? { type: "PENDING_TRAFFIC", value: `${call.id}, ${call.incident} at ${call.location}.` }
+        : { type: "PENDING_TRAFFIC", value: "No pending traffic is recorded." };
+      return context.informationResult;
+    }
     if (request === "REGISTRATION") {
       const plate = observation?.plate ?? null;
       const warrants = plate

@@ -96,7 +96,7 @@ const topics = {
     fields: [
       [
         "Recognized traffic",
-        "10-33, panic activation, officer down/needs help, taking fire, active gunfire, shots fired, and equivalent natural language.",
+        "10-99, panic activation, officer down/needs help, taking fire, active gunfire, shots fired/10-13, and equivalent natural language.",
       ],
       [
         "Response",
@@ -112,15 +112,21 @@ const topics = {
     title: "Guide • Radio Codes",
     fields: [
       [
-        "Core status",
-        "10-4 affirmative • 10-6 busy • 10-7 out of service • 10-8 in service • 10-9 repeat • 10-17 en route • 10-20 location • 10-23 on scene • 10-33 help quick",
+        "10-0 through 10-29",
+        "10-0 disappeared • 10-1 frequency change • 10-2 negative • 10-3 stop transmitting • 10-4 acknowledged • 10-5 relay • 10-6 busy • 10-7 out of service • 10-8 in service • 10-9 repeat • 10-10 fight • 10-11 traffic stop • 10-12 standby • 10-13 shots fired • 10-15 custody transport • 10-16 stolen vehicle • 10-17 suspicious person • 10-18 disturbance • 10-19 ride along • 10-20 location • 10-21 Discord • 10-22 disregard • 10-23 on scene • 10-25 contact • 10-26 ETA • 10-27 license • 10-28 plate • 10-29 warrant",
       ],
       [
-        "Common incidents",
-        "10-43 chase • 10-50 collision • 10-51 wrecker • 10-52 ambulance • 10-61 traffic stop • 10-65 armed robbery • 10-80 domestic • 10-82 person with gun",
+        "10-30 through 10-67",
+        "10-30 wanted person • 10-31 armed person • 10-32 additional unit • 10-34 assignment complete/no report • 10-35 not wanted • 10-36 under control • 10-37 last assignment complete • 10-38 suspicious vehicle • 10-39 police officer • 10-41/42 begin/end tour • 10-43 information • 10-44 park/walk/talk • 10-45 street race • 10-46 EDP • 10-50 accident • 10-51 tow • 10-52 EMS • 10-53 Fire • 10-54 hit and run • 10-55 intoxicated driver • 10-56 intoxicated pedestrian • 10-60 animal attack • 10-61 larceny • 10-62 kidnapping • 10-63 radio check • 10-64 assault • 10-65 armed robbery • 10-66 reckless driver • 10-67 fire",
       ],
-      ["Response codes", "Code 1 routine • Code 2 urgent • Code 3 emergency • Code 4 secure/close assigned scene"],
-      ["Full set", "Configured codes cover 10-1 through 10-99, 10-105 through 10-108, Signal 11, and Codes 1–4."],
+      [
+        "10-70 through 11-44",
+        "10-70 foot pursuit • 10-71 supervisor • 10-73 advise status • 10-76 in route • 10-80 vehicle pursuit • 10-85 delayed • 10-86 traffic for me • 10-88 district assistance • 10-89 major assistance • 10-90 bank alarm • 10-91 unnecessary radio use • 10-93 warning • 10-94 aircraft emergency • 10-97 prisoner transport • 10-99 officer distress • 11-44 person deceased",
+      ],
+      [
+        "Signals and codes",
+        "Signal 11 running radar • Signal 13 clear for crime broadcast • Signal 100 emergency traffic only • Code 4 scene handled • Code 5 felony/high-risk stop • Code 6 in the area. Code 1/2/3 remain the configured routine, urgent, and emergency response modes.",
+      ],
     ],
   },
   commands: {

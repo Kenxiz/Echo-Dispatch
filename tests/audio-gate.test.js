@@ -37,6 +37,8 @@ describe("voice noise gate", () => {
 
   it("recognizes officer panic traffic without reopening a cleared shots-fired call", () => {
     expect(isOfficerPanicTraffic("1 Lincoln 18, shots fired, taking fire")).toBe(true);
+    expect(isOfficerPanicTraffic("1 Lincoln 18, 10-99")).toBe(true);
+    expect(isEmergencyTraffic("Signal 100, emergency traffic only")).toBe(true);
     expect(describeOfficerPanic("shots fired, taking fire")).toBe("is taking fire");
     expect(isOfficerPanicTraffic("1 Lincoln 18, Code 4 on the shots fired call")).toBe(false);
   });

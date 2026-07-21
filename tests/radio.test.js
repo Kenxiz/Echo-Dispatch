@@ -26,13 +26,13 @@ describe("radio formatting", () => {
     expect(speakPlate("GT9*")).toBe("George-Tom-9-unknown characters");
     expect(speakPlate("ABC123|ABC128")).toContain(" or ");
   });
-  it("maps only known MVA aliases", () => {
+  it("maps configured incident aliases", () => {
     expect(detectRadioCode("two-car crash")).toBe("10-50");
-    expect(detectRadioCode("unknown disturbance")).toBeNull();
+    expect(detectRadioCode("unknown disturbance")).toBe("10-18");
   });
   it("maps common call descriptions to the configured department codes", () => {
     expect(detectRadioCode("armed robbery in progress")).toBe("10-65");
-    expect(detectRadioCode("commercial bank alarm")).toBe("10-46");
-    expect(detectRadioCode("domestic disturbance")).toBe("10-80");
+    expect(detectRadioCode("commercial bank alarm")).toBe("10-90");
+    expect(detectRadioCode("domestic disturbance")).toBe("10-18");
   });
 });

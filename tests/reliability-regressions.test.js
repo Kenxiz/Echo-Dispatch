@@ -35,10 +35,10 @@ beforeEach(async () => {
 });
 
 describe("deterministic normalization and configured code execution", () => {
-  it.each(["10-71", "10 71", "1071", "ten seventy-one", "ten seven one", "one zero seven one"])(
-    "recognizes 10-71 from %s",
+  it.each(["10-91", "10 91", "1091", "ten ninety-one", "ten nine one", "one zero nine one"])(
+    "recognizes 10-91 from %s",
     (spoken) => {
-      expect(codebook.detect(spoken).map((match) => match.code)).toContain("10-71");
+      expect(codebook.detect(spoken).map((match) => match.code)).toContain("10-91");
     },
   );
 
@@ -52,29 +52,29 @@ describe("deterministic normalization and configured code execution", () => {
     expect(result.context.actionResults).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ action: "radio_code:10-8:status", disposition: "EXECUTED" }),
-        expect.objectContaining({ action: "radio_code:10-71:activity", disposition: "EXECUTED" }),
+        expect.objectContaining({ action: "radio_code:10-91:activity", disposition: "EXECUTED" }),
       ]),
     );
     expect(result.context.validationResults).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ action: "radio_code:10-8:status", valid: true }),
-        expect.objectContaining({ action: "radio_code:10-71:activity", valid: true }),
+        expect.objectContaining({ action: "radio_code:10-91:activity", valid: true }),
       ]),
     );
     expect(units.getByUserId("primary")).toMatchObject({
       status: "AVAILABLE",
       statusCode: "10-8",
-      activeRadioCodes: [expect.objectContaining({ code: "10-71" })],
+      activeRadioCodes: [expect.objectContaining({ code: "10-91" })],
     });
-    expect(result.response).toContain("10-71, Improper Use of Radio");
+    expect(result.response).toContain("10-91, Unnecessary Use of Radio");
     expect(result.response).not.toContain("do not have a definition");
   });
 
-  it("preserves spoken 10-11 rather than substituting 10-61", async () => {
+  it("treats spoken 10-11 as a traffic stop", async () => {
     const result = await dispatch.processOfficerTransmission("primary", "1 Lincoln 18, show me 10-11.");
-    expect(units.getByUserId("primary")).toMatchObject({ status: "ON_DUTY", statusCode: "10-11" });
+    expect(units.getByUserId("primary")).toMatchObject({ status: "TRAFFIC_STOP", statusCode: "10-11" });
+    expect(result.call).toMatchObject({ incident: "Traffic Stop", radioCode: "10-11", priority: 3 });
     expect(result.response).toContain("10-11");
-    expect(result.response).not.toContain("10-61");
   });
 
   it("executes known actions while asking only about an unknown secondary code", async () => {
@@ -225,6 +225,9 @@ describe("scene, context, felony-stop, and information reliability", () => {
 describe("emergency, resources, and plate safeguards", () => {
   it("distinguishes an officer panic from a report of shots fired", () => {
     expect(classifyEmergencyTraffic("Shots fired near the county jail.").kind).toBe("URGENT_OFFICER_SAFETY");
+    expect(classifyEmergencyTraffic("10-13 near the county jail.").kind).toBe("URGENT_OFFICER_SAFETY");
+    expect(classifyEmergencyTraffic("Signal 100.").kind).toBe("URGENT_OFFICER_SAFETY");
+    expect(classifyEmergencyTraffic("1 Lincoln 18, 10-99.").kind).toBe("OFFICER_PANIC");
     expect(classifyEmergencyTraffic("Shots fired at me, send everybody!").kind).toBe("OFFICER_PANIC");
     expect(classifyEmergencyTraffic("Panic, panic, panic, officer down.").kind).toBe("OFFICER_PANIC");
   });
@@ -248,7 +251,7 @@ describe("emergency, resources, and plate safeguards", () => {
     });
     expect(units.getByUserId("primary")).toMatchObject({
       status: "EMERGENCY",
-      statusCode: "10-33",
+      statusCode: "10-99",
       responseMode: "CODE_3",
       assignedCallId: call.id,
       sceneRole: "ENDANGERED",
@@ -267,6 +270,33 @@ describe("emergency, resources, and plate safeguards", () => {
         expect.objectContaining({ resourceType: "EMS", disposition: "STAGE" }),
         expect.objectContaining({ resourceType: "FIRE", disposition: "STAGE" }),
       ]),
+    );
+  });
+
+  it("activates officer distress from a spoken 10-99", async () => {
+    const result = await dispatch.processOfficerTransmission("primary", "1 Lincoln 18, 10-99.");
+    expect(result.context.actionResults).toContainEqual(
+      expect.objectContaining({ action: "radio_code:10-99:emergency", disposition: "EXECUTED" }),
+    );
+    expect(result.call).toMatchObject({ incident: "Officer Emergency", radioCode: "10-99", priority: 1 });
+    expect(units.getByUserId("primary")).toMatchObject({ status: "EMERGENCY", statusCode: "10-99" });
+  });
+
+  it("creates a coded resource request from 10-52 alone", async () => {
+    const call = await calls.create({
+      source: "OFFICER_INITIATED",
+      incident: "Vehicle Accident",
+      location: "Oak Road",
+      description: "Collision",
+      priority: 2,
+    });
+    await calls.attach("primary", call.id);
+    const result = await dispatch.processOfficerTransmission("primary", "1 Lincoln 18, 10-52.");
+    expect(result.context.actionResults).toContainEqual(
+      expect.objectContaining({ action: "request_resource:EMS", disposition: "EXECUTED" }),
+    );
+    expect(calls.get(call.id).resourceRequests).toContainEqual(
+      expect.objectContaining({ resourceType: "EMS", status: "REQUESTED" }),
     );
   });
 
